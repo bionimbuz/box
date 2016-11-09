@@ -8,22 +8,25 @@ ENV SAMTOOLS_LINK http://sourceforge.net/projects/samtools/files/samtools/0.1.17
 ENV PATH /bin/tophat:/bin/bowtie/:/bin/samtools:$PATH
 
 RUN apt-get -y update && apt-get -y install \
-  gcc \
   bzip2 \
+  gcc \
+  libncurses5-dev \
+  libncursesw5-dev \
+  make \
   python \
   unzip \
   wget \
-  zlib zlib-devel
+  zlib1g-dev	
 
-RUN wget -O tophat.tar.gz $TOPHAT_LINK
-RUN wget -O bowtie.zip $BOWTIE_LINK
-RUN wget -O samtools.tar.bz2 $_LINK
+RUN sudo wget -O tophat.tar.gz $TOPHAT_LINK
+RUN sudo wget -O bowtie.zip $BOWTIE_LINK
+RUN sudo wget -O samtools.tar.bz2 $SAMTOOLS_LINK
 
-RUN tar xzvf tophat.tar.gz -C /bin && mv /bin/tophat* /bin/tophat
-RUN unzip -o bowtie.zip -d /bin && mv /bin/bowtie* /bin/bowtie
-RUN tar xjvf samtools.tar.bz2 -C /bin && /bin/samtools* /bin/samtools
+RUN sudo tar xzvf tophat.tar.gz -C /bin && mv /bin/tophat* /bin/tophat
+RUN sudo unzip -o bowtie.zip -d /bin && mv /bin/bowtie* /bin/bowtie
+RUN sudo tar xjvf samtools.tar.bz2 -C /bin && mv /bin/samtools* /bin/samtools
 
-RUN make -C /bin/samtools
+RUN sudo make -C /bin/samtools
 
-ENTRYPOINT ["/bin/tophat"]
+ENTRYPOINT ["/bin/tophat/tophat"]
 CMD ["--help"]
